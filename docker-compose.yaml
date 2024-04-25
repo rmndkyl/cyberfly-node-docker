@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  cyberfly_node:
+    image: "cyberfly/cyberfly_node:latest"
+    ports:
+      - "31001:31001" #libp2p tcp port
+      - "31002:31002" #libp2p websocket port
+      - "31003:31003" #Cyberfly api port
+    environment:
+      - KADENA_ACCOUNT=k:03df480e0b300c52901fdff265f0460913fea495f39972321698740536cc38e3
+      - MQTT_HOST=mqtt://cyberfly_mqtt
+    depends_on:
+      - cyberfly_mqtt
+
+  cyberfly_node_ui:
+    image: "cyberfly/cyberfly_node_ui:latest"
+    ports:
+      - "80:80" #nginx server port
+
+  cyberfly_mqtt:
+    image: "cyberfly/cyberfly_mqtt:latest"
+    ports:
+      - "31004:1883" #mqtt tcp port
+      - "31005:9001" #mqtt websocket port
