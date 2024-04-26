@@ -17,6 +17,8 @@ services:
     image: "cyberfly/cyberfly_node_ui:latest"
     ports:
       - "31000:80" #nginx server port
+    depends_on:
+      - cyberfly_node
 
   cyberfly_mqtt:
     image: "cyberfly/cyberfly_mqtt:latest"
