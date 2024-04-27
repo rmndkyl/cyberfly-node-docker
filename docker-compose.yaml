@@ -14,6 +14,8 @@ services:
       - "31001:31001" #libp2p tcp port
       - "31002:31002" #libp2p websocket port
       - "31003:31003" #Cyberfly api port
+    volumes:
+      - ./data:/usr/src/app/data
     environment:
       - KADENA_ACCOUNT=k:03df480e0b300c52901fdff265f0460913fea495f39972321698740536cc38e3
       - MQTT_HOST=mqtt://cyberfly_mqtt
