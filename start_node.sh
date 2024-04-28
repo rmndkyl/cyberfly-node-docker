@@ -1,9 +1,18 @@
 #!/bin/bash
 
 # Function to install yq on Linux
-install_yq_linux() {
+install_yq_linux_amd64() {
     sudo apt update
-    sudo apt install -y jq   # Install jq (required by yq)
+    sudo apt install -y jq   
+    sudo wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64 -O /usr/bin/yq
+    sudo chmod +x /usr/bin/yq
+}
+
+install_yq_linux_arm4() {
+    sudo apt update
+    sudo apt install -y jq   
+    sudo wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_arm64 -O /usr/bin/yq
+    sudo chmod +x /usr/bin/yq
 }
 
 # Function to install yq on macOS
@@ -31,14 +40,20 @@ fi
 
 
 platform=$(uname)
+arch=$(arch)
 # Check if yq is already installed
 if ! command -v yq &> /dev/null; then
     # yq command not found, determine the platform and install yq
 
 
     if [ "$platform" == "Linux" ]; then
-        echo "Detected Linux platform. Installing yq..."
-        install_yq_linux
+       if [ "$arch" == "arm64"]; then
+          echo "Detected Linux arm64 platform. Installing yq..."
+          install_yq_linux_arm4
+        else
+          echo "Detected Linux amd64 platform. Installing yq..."
+          install_yq_linux_amd64
+        fi
     elif [ "$platform" == "Darwin" ]; then
         echo "Detected macOS platform. Installing yq..."
         install_yq_macos
@@ -59,12 +74,30 @@ yq ".services.cyberfly_node.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" d
 
 if [ "$platform" == "Linux" ]; then
     docker-compose pull
-    docker-compose -f updated-docker-compose.yaml up
+    docker-compose -f updated-docker-compose.yaml down
+    docker-compose -f updated-docker-compose.yaml up -d
 elif [ "$platform" == "Darwin" ]; then
     docker compose pull
-    docker compose -f updated-docker-compose.yaml up
+    docker compose -f updated-docker-compose.yaml down
+    docker compose -f updated-docker-compose.yaml up -d
     
 else
     echo "Unsupported platform: $platform"
     exit 1
+fi
+
+# Get the current working directory
+SCRIPT_DIR=$(pwd)
+
+# Path to the script you want to run
+SCRIPT_PATH="$SCRIPT_DIR/check_node.sh"
+chmod +x $SCRIPT_PATH
+
+# Check if the cronjob already exists
+if ! crontab -l | grep -q "bash $SCRIPT_PATH"; then
+    # Add the cronjob to run the script every minute
+    (crontab -l ; echo "* * * * * bash $SCRIPT_PATH") | crontab -
+    echo "Cronjob added successfully."
+else
+    echo "Cronjob already exists. No action needed."
 fi

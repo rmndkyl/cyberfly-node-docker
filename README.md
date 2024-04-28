@@ -1,9 +1,9 @@
 # cyberfly-node-docker
 
 ```bash
-chmod +x run.sh
+chmod +x start_node.sh
 ```
 
 ```bash
-./run.sh k:your_kadena_address
+./start_node.sh k:your_kadena_address
 ```
