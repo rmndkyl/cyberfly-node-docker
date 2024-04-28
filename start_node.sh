@@ -94,9 +94,10 @@ SCRIPT_PATH="$SCRIPT_DIR/check_node.sh"
 chmod +x $SCRIPT_PATH
 
 # Check if the cronjob already exists
-if ! crontab -l | grep -q "bash $SCRIPT_PATH"; then
+if ! crontab -l | grep -q "$SCRIPT_PATH"; then
     # Add the cronjob to run the script every minute
-    (crontab -l ; echo "* * * * * bash $SCRIPT_PATH") | crontab -
+    (echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/bin/docker")| crontab -
+    (crontab -l ; echo "* * * * * $SCRIPT_PATH > /tmp/cronjob.log 2>&1" ) | crontab -
     echo "Cronjob added successfully."
 else
     echo "Cronjob already exists. No action needed."
