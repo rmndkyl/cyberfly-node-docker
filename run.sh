@@ -58,8 +58,10 @@ fi
 yq ".services.cyberfly_node.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" docker-compose.yaml > updated-docker-compose.yaml
 
 if [ "$platform" == "Linux" ]; then
+    docker-compose pull
     docker-compose -f updated-docker-compose.yaml up
 elif [ "$platform" == "Darwin" ]; then
+    docker compose pull
     docker compose -f updated-docker-compose.yaml up
     
 else
