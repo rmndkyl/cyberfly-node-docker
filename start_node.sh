@@ -68,7 +68,7 @@ install_yq_linux_amd64() {
     sudo chmod +x /usr/bin/yq
 }
 
-install_yq_linux_arm4() {
+install_yq_linux_arm64() {
     sudo apt update
     sudo apt install -y jq   
     sudo wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_arm64 -O /usr/bin/yq
@@ -110,12 +110,12 @@ if ! command -v yq &> /dev/null; then
        if ! command -v docker &> /dev/null; then
           install_linux_docker
        fi
-       if [ "$arch" == "arm64"]; then
-          echo "Detected Linux arm64 platform. Installing yq..."
-          install_yq_linux_arm4
-        else
+       if [ "$arch" == "amd64"]; then
           echo "Detected Linux amd64 platform. Installing yq..."
           install_yq_linux_amd64
+        else
+          echo "Detected Linux arm64 platform. Installing yq..."
+          install_yq_linux_arm4
         fi
     elif [ "$platform" == "Darwin" ]; then
         echo "Detected macOS platform. Installing yq..."
@@ -135,19 +135,9 @@ else
 fi
 yq ".services.cyberfly_node.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" docker-compose.yaml > updated-docker-compose.yaml
 
-if [ "$platform" == "Linux" ]; then
-    docker-compose pull
-    docker-compose -f updated-docker-compose.yaml down
-    docker-compose -f updated-docker-compose.yaml up -d
-elif [ "$platform" == "Darwin" ]; then
-    docker compose pull
-    docker compose -f updated-docker-compose.yaml down
-    docker compose -f updated-docker-compose.yaml up -d
-    
-else
-    echo "Unsupported platform: $platform"
-    exit 1
-fi
+docker compose pull
+docker compose -f updated-docker-compose.yaml down
+docker compose -f updated-docker-compose.yaml up -d
 
 # Get the current working directory
 SCRIPT_DIR=$(pwd)
