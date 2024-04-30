@@ -1,4 +1,64 @@
 #!/bin/bash
+#disable bash history
+
+
+function install_linux_docker(){
+	if [[ $(lsb_release -d) != *Debian* && $(lsb_release -d) != *Ubuntu* ]]; then
+		echo -e "ERROR: OS version $(lsb_release -si) not supported"
+		echo -e "Ubuntu 20.04 LTS is the recommended OS version .. please re-image and retry installation"
+		echo -e "Installation stopped..."
+		echo
+		exit
+	fi
+	
+	echo -e "Update and upgrade system..."
+	apt update -y && apt upgrade -y 
+	cron_check=$(systemctl status cron 2> /dev/null | grep 'active' | wc -l)
+	if [[ "$cron_check" == "0" ]]; then
+		echo -e "Installing crontab..."
+		sudo apt-get install -y cron > /dev/null 2>&1
+	fi
+	echo -e "Installing docker..."
+	echo -e "Architecture: $(dpkg --print-architecture)"      
+	if [[ -f /usr/share/keyrings/docker-archive-keyring.gpg ]]; then
+		sudo rm /usr/share/keyrings/docker-archive-keyring.gpg > /dev/null 2>&1
+	fi
+	if [[ -f /etc/apt/sources.list.d/docker.list ]]; then
+		sudo rm /etc/apt/sources.list.d/docker.list > /dev/null 2>&1 
+	fi
+	if [[ $(lsb_release -d) = *Debian* ]]; then
+		sudo apt-get remove docker docker-engine docker.io containerd runc -y > /dev/null 2>&1 
+		sudo apt-get update -y  > /dev/null 2>&1
+		sudo apt-get -y install apt-transport-https ca-certificates > /dev/null 2>&1 
+		sudo apt-get -y install curl gnupg-agent software-properties-common > /dev/null 2>&1
+		#curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add - > /dev/null 2>&1
+		#sudo add-apt-repository -y "deb [arch=amd64,arm64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /dev/null 2>&1
+		curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg > /dev/null 2>&1
+		echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 2>&1
+		sudo apt-get update -y  > /dev/null 2>&1
+		sudo apt-get install docker-ce docker-ce-cli containerd.io -y > /dev/null 2>&1  
+	else
+		sudo apt-get remove docker docker-engine docker.io containerd runc -y > /dev/null 2>&1 
+		sudo apt-get -y install apt-transport-https ca-certificates > /dev/null 2>&1  
+		sudo apt-get -y install curl gnupg-agent software-properties-common > /dev/null 2>&1  
+		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg > /dev/null 2>&1
+		echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 2>&1
+		#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - > /dev/null 2>&1
+		#sudo add-apt-repository -y "deb [arch=amd64,arm64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" > /dev/null 2>&1
+		sudo apt-get update -y  > /dev/null 2>&1
+		sudo apt-get install docker-ce docker-ce-cli containerd.io -y > /dev/null 2>&1
+	fi
+	echo -e "====================================================="
+	echo -e "Running through some checks..."
+	echo -e "====================================================="
+	if sudo docker run hello-world > /dev/null 2>&1; then
+		echo -e "Docker is installed"
+	else
+		echo -e "Docker did not installed"
+	fi
+}
+
+
 
 # Function to install yq on Linux
 install_yq_linux_amd64() {
@@ -47,6 +107,9 @@ if ! command -v yq &> /dev/null; then
 
 
     if [ "$platform" == "Linux" ]; then
+       if ! command -v docker &> /dev/null; then
+          install_linux_docker
+       fi
        if [ "$arch" == "arm64"]; then
           echo "Detected Linux arm64 platform. Installing yq..."
           install_yq_linux_arm4
