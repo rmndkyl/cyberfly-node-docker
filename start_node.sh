@@ -100,13 +100,13 @@ fi
 
 
 platform=$(uname)
-arch=$(arch)
 # Check if yq is already installed
 if ! command -v yq &> /dev/null; then
     # yq command not found, determine the platform and install yq
 
 
     if [ "$platform" == "Linux" ]; then
+       arch=$(dpkg --print-architecture)
        if ! command -v docker &> /dev/null; then
           install_linux_docker
        fi
