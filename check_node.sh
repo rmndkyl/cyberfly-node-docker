@@ -16,16 +16,16 @@ log() {
 log "script execution starts"
 
 response=$(curl -s -X GET http://localhost:31003/api)
-if [ "$response" = *"\"health\":\"ok\""* ]; then
+if [[ "$response" == *"\"health\":\"ok\""* ]]; then
     echo "Response received: health is ok"
 else
     log "Node might be down. Trying to bring it up."
 
-    if [ "$platform" = "Linux" ]; then
+    if [ "$platform" == "Linux" ]; then
         echo "Starting node on Linux"
         docker-compose -f updated-docker-compose.yaml down
         docker-compose -f updated-docker-compose.yaml up -d
-    elif [ "$platform" = "Darwin" ]; then
+    elif [ "$platform" == "Darwin" ]; then
         echo "Starting node on Darwin (Mac)"
         docker compose -f updated-docker-compose.yaml down
         docker compose -f updated-docker-compose.yaml up -d
