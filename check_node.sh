@@ -1,3 +1,4 @@
+#!/bin/bash
 platform=$(uname)
 SCRIPT_DIR=$(pwd)
 LOG_FILE="/var/log/cyberfly_node.log"
@@ -15,18 +16,21 @@ log() {
 log "script execution starts"
 
 response=$(curl -s -X GET http://localhost:31003/api)
-if [ "$response" == *"\"health\":\"ok\""* ]; then
-   echo "Response received: health is ok"
+if [ "$response" = *"\"health\":\"ok\""* ]; then
+    echo "Response received: health is ok"
 else
-    log "Node might be down. try to up it"
-    if [ "$platform" == "Linux" ]; then
-       echo "Starting node"
-       docker-compose -f updated-docker-compose.yaml down
-       docker-compose -f updated-docker-compose.yaml up -d
+    log "Node might be down. Trying to bring it up."
 
-    elif [ "$platform" == "Darwin" ]; then
-         echo "Starting node"
-         docker compose -f updated-docker-compose.yaml down
-         docker compose -f updated-docker-compose.yaml up -d
+    if [ "$platform" = "Linux" ]; then
+        echo "Starting node on Linux"
+        docker-compose -f updated-docker-compose.yaml down
+        docker-compose -f updated-docker-compose.yaml up -d
+    elif [ "$platform" = "Darwin" ]; then
+        echo "Starting node on Darwin (Mac)"
+        docker compose -f updated-docker-compose.yaml down
+        docker compose -f updated-docker-compose.yaml up -d
+    else
+        echo "Unsupported platform: $platform"
+        log "Unsupported platform: $platform"
     fi
 fi
