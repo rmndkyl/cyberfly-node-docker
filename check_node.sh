@@ -15,16 +15,18 @@ log() {
 log "script execution starts"
 
 response=$(curl -s -X GET http://localhost:31003/api)
-if [[ "$response" == *"\"health\":\"ok\""* ]]; then
-    echo "Response received: health is ok"
+if [ "$response" == *"\"health\":\"ok\""* ]; then
+   echo "Response received: health is ok"
 else
     log "Node might be down. try to up it"
     if [ "$platform" == "Linux" ]; then
+       echo "Starting node"
        docker-compose -f updated-docker-compose.yaml down
        docker-compose -f updated-docker-compose.yaml up -d
 
     elif [ "$platform" == "Darwin" ]; then
-       docker compose -f updated-docker-compose.yaml down
-       docker compose -f updated-docker-compose.yaml up -d
+         echo "Starting node"
+         docker compose -f updated-docker-compose.yaml down
+         docker compose -f updated-docker-compose.yaml up -d
     fi
 fi
