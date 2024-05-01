@@ -115,7 +115,7 @@ if ! command -v yq &> /dev/null; then
           install_yq_linux_amd64
         else
           echo "Detected Linux arm64 platform. Installing yq..."
-          install_yq_linux_arm4
+          install_yq_linux_arm64
         fi
     elif [ "$platform" == "Darwin" ]; then
         echo "Detected macOS platform. Installing yq..."
