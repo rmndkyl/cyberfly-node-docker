@@ -105,19 +105,19 @@ if ! command -v yq &> /dev/null; then
     # yq command not found, determine the platform and install yq
 
 
-    if [ "$platform" == "Linux" ]; then
+    if [[ "$platform" == "Linux" ]]; then
        arch=$(dpkg --print-architecture)
        if ! command -v docker &> /dev/null; then
           install_linux_docker
        fi
-       if [ "$arch" == "amd64"]; then
+       if [[ "$arch" == "amd64" ]]; then
           echo "Detected Linux amd64 platform. Installing yq..."
           install_yq_linux_amd64
         else
           echo "Detected Linux arm64 platform. Installing yq..."
           install_yq_linux_arm64
         fi
-    elif [ "$platform" == "Darwin" ]; then
+    elif [[ "$platform" == "Darwin" ]]; then
         echo "Detected macOS platform. Installing yq..."
         install_yq_macos
     else
