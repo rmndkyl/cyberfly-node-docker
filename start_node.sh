@@ -133,7 +133,7 @@ else
     echo "Current yq version:"
     yq --version
 fi
-yq ".services.cyberfly_node.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" docker-compose.yaml > updated-docker-compose.yaml
+yq ".services.cyberfly_node.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" cyberfly-docker-compose.yaml > updated-docker-compose.yaml
 
 docker compose pull
 docker compose -f updated-docker-compose.yaml down
