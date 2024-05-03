@@ -1,17 +1,19 @@
 version: '3.8'
 
 services:
-  cyberfly_node_ui:
+  cyberflynodeui:
     image: "cyberfly/cyberfly_node_ui:latest"
     restart: always
+    pull: always
     ports:
       - "31000:80" #nginx server port
     depends_on:
       - cyberfly_node
 
-  cyberfly_node:
+  cyberflynode:
     image: "cyberfly/cyberfly_node:latest"
     restart: always
+    pull: always
     ports:
       - "31001:31001" #libp2p tcp port
       - "31002:31002" #libp2p websocket port
@@ -20,13 +22,14 @@ services:
       - ./data:/usr/src/app/data
     environment:
       - KADENA_ACCOUNT=k:your_kadena_address
-      - MQTT_HOST=mqtt://cyberfly_mqtt
+      - MQTT_HOST=mqtt://cyberflymqtt
     depends_on:
       - cyberfly_mqtt
 
-  cyberfly_mqtt:
+  cyberflymqtt:
     image: "cyberfly/cyberfly_mqtt:latest"
     restart: always
+    pull: always
     ports:
       - "31004:1883" #mqtt tcp port
       - "31005:9001" #mqtt websocket port
