@@ -3,6 +3,7 @@ version: '3.8'
 services:
   cyberfly_node_ui:
     image: "cyberfly/cyberfly_node_ui:latest"
+    restart: always
     ports:
       - "31000:80" #nginx server port
     depends_on:
@@ -10,6 +11,7 @@ services:
 
   cyberfly_node:
     image: "cyberfly/cyberfly_node:latest"
+    restart: always
     ports:
       - "31001:31001" #libp2p tcp port
       - "31002:31002" #libp2p websocket port
@@ -24,6 +26,7 @@ services:
 
   cyberfly_mqtt:
     image: "cyberfly/cyberfly_mqtt:latest"
+    restart: always
     ports:
       - "31004:1883" #mqtt tcp port
       - "31005:9001" #mqtt websocket port

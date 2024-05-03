@@ -18,6 +18,7 @@ log "script execution starts"
 response=$(curl -s -X GET http://localhost:31003/api)
 if [[ "$response" == *"\"health\":\"ok\""* ]]; then
     echo "Response received: health is ok"
+    docker compose -f updated-docker-compose.yaml pull
 else
     log "Node might be down. Trying to bring it up."
     echo "Starting node"
