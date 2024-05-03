@@ -21,7 +21,7 @@ if [[ "$response" == *"\"health\":\"ok\""* ]]; then
 else
     log "Node might be down. Trying to bring it up."
     echo "Starting node"
-    docker compose pull
+    docker compose -f updated-docker-compose.yaml pull
     docker compose -f updated-docker-compose.yaml down
     docker compose -f updated-docker-compose.yaml up -d
    
