@@ -7,7 +7,7 @@ services:
     ports:
       - "31000:80" #nginx server port
     depends_on:
-      - cyberfly_node
+      - cyberflynode
 
   cyberflynode:
     image: "cyberfly/cyberfly_node:latest"
@@ -22,7 +22,7 @@ services:
       - KADENA_ACCOUNT=k:your_kadena_address
       - MQTT_HOST=mqtt://cyberflymqtt
     depends_on:
-      - cyberfly_mqtt
+      - cyberflymqtt
 
   cyberflymqtt:
     image: "cyberfly/cyberfly_mqtt:latest"
