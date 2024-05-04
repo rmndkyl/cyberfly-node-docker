@@ -30,3 +30,11 @@ services:
     ports:
       - "31004:1883" #mqtt tcp port
       - "31005:9001" #mqtt websocket port
+  
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=30
