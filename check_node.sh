@@ -23,6 +23,6 @@ else
     echo "Starting node"
     docker compose -f updated-docker-compose.yaml pull
     docker compose -f updated-docker-compose.yaml down
-    docker compose -f updated-docker-compose.yaml up -d
+    docker compose -f updated-docker-compose.yaml up --force-recreate -d
    
 fi

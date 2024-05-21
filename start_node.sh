@@ -136,7 +136,7 @@ fi
 yq ".services.cyberflynode.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" cyberfly-docker-compose.yaml > updated-docker-compose.yaml
 docker compose -f updated-docker-compose.yaml pull
 docker compose -f updated-docker-compose.yaml down
-docker compose -f updated-docker-compose.yaml up -d
+docker compose -f updated-docker-compose.yaml up --force-recreate -d
 
 # Get the current working directory
 SCRIPT_DIR=$(pwd)
