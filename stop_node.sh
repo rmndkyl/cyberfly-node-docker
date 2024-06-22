@@ -1,3 +1,3 @@
 #!/bin/bash
-crontab -r
-docker compose -f updated-docker-compose.yaml down
+sudo crontab -r
+sudo docker compose -f updated-docker-compose.yaml down
