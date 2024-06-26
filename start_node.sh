@@ -137,20 +137,3 @@ yq ".services.cyberflynode.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" cy
 docker compose -f updated-docker-compose.yaml pull
 docker compose -f updated-docker-compose.yaml down
 docker compose -f updated-docker-compose.yaml up --force-recreate -d
-
-# Get the current working directory
-SCRIPT_DIR=$(pwd)
-
-# Path to the script you want to run
-SCRIPT_PATH="$SCRIPT_DIR/check_node.sh"
-chmod +x $SCRIPT_PATH
-
-# Check if the cronjob already exists
-if ! crontab -l | grep -q "$SCRIPT_PATH"; then
-    # Add the cronjob to run the script every minute
-    (echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/bin/docker")| crontab -
-    (crontab -l ; echo "* * * * * $SCRIPT_PATH > /tmp/cronjob.log 2>&1" ) | crontab -
-    echo "Cronjob added successfully."
-else
-    echo "Cronjob already exists. No action needed."
-fi
