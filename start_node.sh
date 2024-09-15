@@ -80,21 +80,33 @@ install_yq_macos() {
     brew install yq   # Install yq using Homebrew
 }
 
-if [ $# -eq 0 ]; then
-    echo "Usage: $0 k:address"
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 k:address node_priv_key"
     exit 1
 fi
 kadena_address="$1"
+node_priv_key="$2"
+
 
 
 # Define the regex pattern
 pattern="^k:[0-9a-f]{64}$"
+priv_key_pattern="[0-9a-f]{64}$"
+
 
 # Use grep to check if the input string matches the pattern
 if echo "$kadena_address" | grep -qE "$pattern"; then
     echo "Valid kadena address"
 else
     echo "Invalid Kadena address"
+    exit 1
+fi
+
+# Use grep to check if the input string matches the pattern
+if echo "$node_priv_key" | grep -qE "$priv_key_pattern"; then
+    echo "Valid node secret key"
+else
+    echo "Invalid secret key"
     exit 1
 fi
 
@@ -133,7 +145,9 @@ else
     echo "Current yq version:"
     yq --version
 fi
-yq ".services.cyberflynode.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" cyberfly-docker-compose.yaml > updated-docker-compose.yaml
+yq ".services.cyberflynode.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" cyberfly-docker-compose.yaml > temp.yaml
+yq ".services.cyberflynode.environment[1]=\"NODE_PRIV_KEY=$node_priv_key\"" temp.yaml > updated-docker-compose.yaml
+rm temp.yaml
 docker compose -f updated-docker-compose.yaml pull
 docker compose -f updated-docker-compose.yaml down
 docker compose -f updated-docker-compose.yaml up --force-recreate -d

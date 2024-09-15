@@ -20,6 +20,7 @@ services:
       - ./data:/usr/src/app/data
     environment:
       - KADENA_ACCOUNT=k:your_kadena_address
+      - NODE_PRIV_KEY=your_node_private_key
       - MQTT_HOST=mqtt://cyberflymqtt
     depends_on:
       - cyberflymqtt
