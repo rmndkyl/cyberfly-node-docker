@@ -5,5 +5,5 @@ sudo chmod +x start_node.sh
 ```
 
 ```bash
-sudo ./start_node.sh k:your_kadena_address
+sudo ./start_node.sh k:your_kadena_address node_priv_key
 ```
