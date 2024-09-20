@@ -32,6 +32,12 @@ services:
       - "31004:1883" #mqtt tcp port
       - "31005:9001" #mqtt websocket port
   
+  redis_stack_server:
+    image: redis/redis-stack-server:latest
+    restart: always
+    volumes:
+      - ./redis-data:/data
+  
   watchtower:
     image: containrrr/watchtower
     volumes:
