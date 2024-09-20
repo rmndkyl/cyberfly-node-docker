@@ -22,6 +22,7 @@ services:
       - KADENA_ACCOUNT=k:your_kadena_address
       - NODE_PRIV_KEY=your_node_private_key
       - MQTT_HOST=mqtt://cyberflymqtt
+      - REDIS_HOST=redisstackserver
     depends_on:
       - cyberflymqtt
       - redisstackserver
@@ -36,8 +37,6 @@ services:
   redisstackserver:
     image: redis/redis-stack-server:latest
     restart: always
-    ports:
-      - "127.0.0.1:6379:6379"
     volumes:
       - ./redis-data:/data
   
