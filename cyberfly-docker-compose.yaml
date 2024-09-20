@@ -24,6 +24,7 @@ services:
       - MQTT_HOST=mqtt://cyberflymqtt
     depends_on:
       - cyberflymqtt
+      - redisstackserver
 
   cyberflymqtt:
     image: "cyberfly/cyberfly_mqtt:latest"
@@ -32,7 +33,7 @@ services:
       - "31004:1883" #mqtt tcp port
       - "31005:9001" #mqtt websocket port
   
-  redis_stack_server:
+  redisstackserver:
     image: redis/redis-stack-server:latest
     restart: always
     volumes:
