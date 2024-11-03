@@ -47,3 +47,4 @@ services:
     restart: always
     environment:
       - WATCHTOWER_POLL_INTERVAL=30
+      - WATCHTOWER_CLEANUP=true
