@@ -22,10 +22,10 @@ services:
       - KADENA_ACCOUNT=k:your_kadena_address
       - NODE_PRIV_KEY=your_node_private_key
       - MQTT_HOST=mqtt://cyberflymqtt
-      - REDIS_HOST=redisstackserver
+      - REDIS_HOST=dragonfly
     depends_on:
       - cyberflymqtt
-      - redisstackserver
+      - dragonfly
 
   cyberflymqtt:
     image: "cyberfly/cyberfly_mqtt:latest"
@@ -34,11 +34,13 @@ services:
       - "31004:1883" #mqtt tcp port
       - "31005:9001" #mqtt websocket port
   
-  redisstackserver:
-    image: redis/redis-stack-server:latest
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    ulimits:
+      memlock: -1
     restart: always
     volumes:
-      - ./redis-data:/data
+      - dragonflydata:/data
   
   watchtower:
     image: containrrr/watchtower
