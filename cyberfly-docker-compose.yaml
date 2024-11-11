@@ -40,7 +40,7 @@ services:
       memlock: -1
     restart: always
     volumes:
-      - dragonflydata:/data
+      - ./dragonflydata:/data
   
   watchtower:
     image: containrrr/watchtower
