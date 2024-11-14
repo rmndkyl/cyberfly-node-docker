@@ -6,7 +6,7 @@ sudo chmod +x start_node.sh
 
 ### Generate Keypair 
 
-visit here - https://transfer.chainweb.com/ and click generate keypair button. save that file somewhere safely for future use.
+visit here - https://kadena-community.github.io/kadena-tools/ and click generate keypair button. save that file somewhere safely for future use.
 copy private key.
 
 
