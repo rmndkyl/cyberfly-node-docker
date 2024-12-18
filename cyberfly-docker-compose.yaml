@@ -35,13 +35,13 @@ services:
       - "31005:9001" #mqtt websocket port
   
   redisstackserver:
-    image: redis/redis-stack-server:latest
+    image: "redis:8.0-M02-alpine3.20"
     restart: always
     volumes:
       - ./redis-data:/data
   
   watchtower:
-    image: containrrr/watchtower
+    image: "containrrr/watchtower"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
