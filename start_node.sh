@@ -148,6 +148,6 @@ fi
 yq ".services.cyberflynode.environment[0]=\"KADENA_ACCOUNT=$kadena_address\"" cyberfly-docker-compose.yaml > temp.yaml
 yq ".services.cyberflynode.environment[1]=\"NODE_PRIV_KEY=$node_priv_key\"" temp.yaml > updated-docker-compose.yaml
 rm temp.yaml
-docker compose -f updated-docker-compose.yaml pull
-docker compose -f updated-docker-compose.yaml down
-docker compose -f updated-docker-compose.yaml up --force-recreate -d
+docker-compose -f updated-docker-compose.yaml pull
+docker-compose -f updated-docker-compose.yaml down
+docker-compose -f updated-docker-compose.yaml up --force-recreate -d
